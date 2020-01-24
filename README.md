@@ -13,5 +13,5 @@ In order to build and run the application you need to have Docker installed and 
 #### Set the container up web
 `$ docker-compose up web`
 
-# The application will start at `localhost:5000` \o/
-# The flower will start at `localhost:5555` \o/
+### The application will start at `localhost:5000` \o/
+### The flower will start at `localhost:5555` \o/
