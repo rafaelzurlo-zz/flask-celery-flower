@@ -1,0 +1,68 @@
+redis:
+  container_name: redis
+  image: redis:alpine
+  command: redis-server --requirepass Redis
+  ports:
+    - "6379:6379"
+  expose:
+    - "6379"
+
+web:
+  dockerfile: Dockerfile-web
+  build: .
+  tty: true
+  stdin_open: true
+  volumes:
+    - .:/usr/src/app
+  environment:
+    - DEBUG=True
+    - FLASK_ENV=development
+    - FLASK_APP=app.py
+    - REDIS_PASSWORD=Redis
+  links:
+    - redis
+    - celery
+    - flower
+  ports:
+    - 5000:5000
+  expose:
+    - "5000"
+  
+celery:
+  dockerfile: Dockerfile-celery
+  build: .
+  tty: true
+  stdin_open: true
+  volumes:
+    - .:/usr/src/app
+  environment:
+    - DEBUG=True
+    - FLASK_ENV=development
+    - FLASK_APP=app.py
+    - REDIS_PASSWORD=Redis
+  links:
+    - redis
+  ports:
+    - 5010:5010
+  expose:
+    - "5010"
+
+flower:
+  dockerfile: Dockerfile-flower
+  build: .
+  tty: true
+  stdin_open: true
+  volumes:
+    - .:/usr/src/app
+  environment:
+    - DEBUG=True
+    - FLASK_ENV=development
+    - FLASK_APP=app.py
+    - REDIS_PASSWORD=Redis
+  links:
+    - redis
+  ports:
+    - 5555:5555
+  expose:
+    - "5555"    
+
